@@ -3,7 +3,6 @@ import speech_recognition as sr
 import dotenv
 import os
 import yt_dlp
-import math
 from openai import OpenAI
 from pydub import AudioSegment
 
@@ -17,6 +16,16 @@ dotenv.load_dotenv()
 myOpenAI = OpenAI()
 myOpenAI.api_key = os.getenv("OPENAI_API_KEY")
 
+FFMPEG_PATH = os.getenv("FFMPEG_PATH") 
+FFPROBE_PATH = os.getenv("FFMPEG_PATH")
+
+AudioSegment.ffmpeg = FFMPEG_PATH
+AudioSegment.converter = FFMPEG_PATH
+AudioSegment.ffprobe = FFMPEG_PATH
+
+mp.AudioFileClip.ffmpeg_exe = FFMPEG_PATH
+
+
 def download_audio(video_url, audio_filename = "audio/audio"):
     print("DOWNLOADING AUDIO")
     ydl_opts = {
@@ -27,6 +36,7 @@ def download_audio(video_url, audio_filename = "audio/audio"):
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
+        'ffmpeg_location': FFMPEG_PATH
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -86,6 +96,8 @@ def main():
     os.remove(MP3_PATH)
     os.remove(WAV_PATH)
 
-main()
+if __name__ == '__main__':
+    main()
+
 
 

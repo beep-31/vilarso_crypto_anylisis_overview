@@ -1,2 +1,4 @@
 newenv/
+venv/
 .env 
+video/
